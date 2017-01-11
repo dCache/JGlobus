@@ -516,8 +516,6 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
                     }
                 } else if (oid.equals(X509Extensions.KeyUsage)) {
                     proxyKeyUsage = proxyExtension;
-
-                    checkKeyUsage(issuer, proxyExtension);
                 }
             }
         }
@@ -533,15 +531,6 @@ public class X509ProxyCertPathValidator extends CertPathValidatorSpi {
             }
         }
 
-    }
-
-    private void checkKeyUsage(TBSCertificateStructure issuer, X509Extension proxyExtension) throws IOException, CertPathValidatorException {
-        boolean[] keyUsage =
-                CertificateUtil.getKeyUsage(proxyExtension);
-        // these must not be asserted
-        if (keyUsage[CertificateUtil.NON_REPUDIATION] || keyUsage[CertificateUtil.KEY_CERTSIGN]) {
-            throw new CertPathValidatorException("Proxy violation: Key usage is asserted.");
-        }
     }
 
     private void checkExtension(DERObjectIdentifier oid, X509Extension proxyExtension, X509Extension proxyKeyUsage) throws CertPathValidatorException {
